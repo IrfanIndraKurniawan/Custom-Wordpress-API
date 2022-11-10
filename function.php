@@ -39,7 +39,7 @@ function get_latest_posts_by_category($request)
             "post_date"     => $post->post_date,
             "title"         => $post->post_title,
             "category_name" => array_values($cats)[0],
-            "image_url"     => '',
+            "image_url"     => get_post_feature_image($post->ID),
         ];
     }
 
@@ -59,10 +59,25 @@ function get_post_by_id($request)
         "title"         => $post->post_title,
         "category_name" => get_category($post_categories[0])->name,
         "post_content"  => $post->post_content,
-        //"image_url"     => '',
+        "image_url"     => get_post_feature_image($post->ID),
     ];
 
     $response = new WP_REST_Response($post_output);
     $response->set_status(200);
     return $response;
+}
+
+function get_post_feature_image($post_id)
+{
+    $args = [
+        'posts_per_page'    => 1,
+        'order'             => 'ASC',
+        'post_mime_type'    => 'image',
+        'post_parejt'       => $post_id,
+        'post_status'       => null,
+        'post_type'         => 'attachment',
+    ];
+
+    $attachments = get_children($args);
+    return wp_get_attachment_image_src(array_values($attachments)[0]->ID, 'full')[0];
 }
