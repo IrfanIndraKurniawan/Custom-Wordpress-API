@@ -32,7 +32,7 @@ function get_latest_posts_by_category($request)
             $cats[] = $cat->name;
         }
 
-        $post_list = [
+        $post_list[] = [
             "id" => $post->ID,
             "post_date" => $post->post_date,
             "title" => $post->post_title,
